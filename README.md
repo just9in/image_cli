@@ -1,19 +1,19 @@
-📌 Image CLI – Image Registration, Search & De-registration System
+Image CLI – Image Registration, Search & De-registration System
 📖 Overview
 
 This is a Command Line Interface (CLI) based Image Management Application built using Python and SQLite (Relational Database).
 
 The system allows users to:
 
-✅ Register an image
+Register an image
 
-🔍 Search for a matching image
+Search for a matching image
 
-❌ De-register (delete) an image
+De-register (delete) an image
 
 The application uses perceptual image hashing to compare image similarity efficiently.
 
-🏗️ System Architecture
+System Architecture
 User (CLI Command)
         ↓
 Argument Parser (argparse)
@@ -27,7 +27,7 @@ Result Output
 
 The application stores only metadata and image hash in the database (not the full image).
 
-🛠️ Technologies Used
+Tech Stack
 
 Python 3
 
@@ -226,5 +226,6 @@ Image processing fundamentals
 Efficient similarity search techniques
 
 Clean modular Python architecture
+
 
 The system provides a simple but scalable approach to image registration and search using perceptual hashing.
