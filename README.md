@@ -17,14 +17,14 @@ The project uses a relational database (SQLite) to store image metadata and perc
 ## Features
 
 - **Image Registration**
-	- Save image name, path, and hash in DB
-	- Prevent duplicate names
+  - Save image name, path, and hash in DB
+  - Prevent duplicate names
 - **Image Search**
-	- Accept an input image
-	- Compare with stored hashes
-	- Return matched image name
+  - Accept an input image
+  - Compare with stored hashes
+  - Return matched image name
 - **Image De-registration**
-	- Delete a registered image record by name
+  - Delete a registered image record by name
 
 ## Tech Stack
 
@@ -109,11 +109,11 @@ python imageCLI/app.py delete --name MyDog
 ## Common errors and fixes
 
 - **"Image file does not exist"**
-	- Ensure the file exists in `imageCLI/images/` or provide full path.
+  - Ensure the file exists in `imageCLI/images/` or provide full path.
 - **Duplicate name error**
-	- Use a different `--name`.
+  - Use a different `--name`.
 - **"Image not found" on delete**
-	- The provided name is not registered.
+  - The provided name is not registered.
 
 ## Quick demo commands
 
