@@ -1,231 +1,131 @@
-Image CLI – Image Registration, Search & De-registration System
-📖 Overview
+# Image CLI
 
-This is a Command Line Interface (CLI) based Image Management Application built using Python and SQLite (Relational Database).
+A beginner-friendly Command Line Interface (CLI) application to:
+- register images,
+- search for a matching image,
+- de-register (delete) registered images.
 
-The system allows users to:
+The project uses a relational database (SQLite) to store image metadata and perceptual hashes.
 
-Register an image
+## What this project demonstrates
 
-Search for a matching image
+- Python CLI development with `argparse`
+- Relational database usage with SQLite
+- Image similarity matching using perceptual hashing (`pHash`)
+- Basic error handling and modular project structure
 
-De-register (delete) an image
+## Features
 
-The application uses perceptual image hashing to compare image similarity efficiently.
+- **Image Registration**
+	- Save image name, path, and hash in DB
+	- Prevent duplicate names
+- **Image Search**
+	- Accept an input image
+	- Compare with stored hashes
+	- Return matched image name
+- **Image De-registration**
+	- Delete a registered image record by name
 
-System Architecture
-User (CLI Command)
-        ↓
-Argument Parser (argparse)
-        ↓
-Image Processing (Pillow + imagehash)
-        ↓
-SQLite Database
-        ↓
-Result Output
+## Tech Stack
 
+- Python 3
+- SQLite (built into Python)
+- Pillow
+- ImageHash
 
-The application stores only metadata and image hash in the database (not the full image).
+## Project Structure
 
-Tech Stack
-
-Python 3
-
-SQLite (Relational Database)
-
-Pillow (Image Processing)
-
-imagehash (Perceptual Hashing)
-
-argparse (CLI handling)
-
-📂 Project Structure
-image_cli/
-│
-├── app.py           # Main CLI controller
-├── db.py            # Database operations
-├── image_utils.py   # Image hashing logic
-├── database.db      # SQLite database (auto-created)
+```
+imageCLI/
+├── app.py             # CLI entry point
+├── db.py              # Database setup + CRUD operations
+├── image_utils.py     # Image hashing helper
+├── images/            # Place your input images here
+├── requirements.txt
 └── README.md
+```
 
-🗄️ Database Design
+> `database.db` is auto-created at runtime and intentionally not committed to GitHub.
 
-Table Name: images
+## Database Schema
 
-Column	Type	Description
-id	INTEGER	Primary Key
-name	TEXT	Unique image name
-path	TEXT	Image file path
-hash	TEXT	Perceptual hash
-created_at	TIMESTAMP	Registration time
-SQL Schema
-CREATE TABLE images (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT UNIQUE NOT NULL,
-    path TEXT NOT NULL,
-    hash TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+Table: `images`
 
-🖼️ How Image Matching Works
+| Column     | Type      | Description                      |
+|------------|-----------|----------------------------------|
+| id         | INTEGER   | Primary key (auto increment)     |
+| name       | TEXT      | Unique image name                |
+| path       | TEXT      | Absolute image file path         |
+| hash       | TEXT      | Perceptual hash (pHash)          |
+| created_at | TIMESTAMP | Record creation timestamp        |
 
-The system uses Perceptual Hashing (pHash).
+## Setup
 
-What is Perceptual Hashing?
+From the `imageCLI` folder:
 
-Instead of comparing full images pixel by pixel:
+```bash
+pip install -r requirements.txt
+```
 
-The image is converted into a small fingerprint (hash).
+## Usage
 
-The hash represents image structure.
+You can run from project root (`CLI interfacing`) or from inside `imageCLI`.
 
-During search, hashes are compared using Hamming Distance.
+### 1) Show help
 
-Hamming Distance
+```bash
+python imageCLI/app.py --help
+```
 
-Measures difference between two hashes.
+### 2) Register an image
 
-Smaller value = more similar images.
+```bash
+python imageCLI/app.py register --path dog.jpg --name MyDog
+```
 
-Threshold used: <= 5
+### 3) Search for a match
 
-⚙️ Installation & Setup
-1️⃣ Clone or Download Project
-git clone <repository_url>
-cd image_cli
+```bash
+python imageCLI/app.py search --path dog.jpg
+```
 
-2️⃣ Install Dependencies
-pip install pillow imagehash
+### 4) De-register an image
 
+```bash
+python imageCLI/app.py delete --name MyDog
+```
 
-SQLite is included with Python.
+## Path behavior
 
-🚀 Usage
+- If `--path` is a full/relative valid path, that file is used.
+- If only a filename is provided (example: `dog.jpg`), the app looks inside `imageCLI/images/`.
 
-Run commands from terminal:
+## Matching logic
 
-📌 Register an Image
-python app.py register --path image.jpg --name MyImage
+- Each image is converted into a perceptual hash (`pHash`).
+- During search, hash distance is measured using Hamming distance.
+- Current threshold: `<= 5` is treated as a match.
 
+## Common errors and fixes
 
-This will:
+- **"Image file does not exist"**
+	- Ensure the file exists in `imageCLI/images/` or provide full path.
+- **Duplicate name error**
+	- Use a different `--name`.
+- **"Image not found" on delete**
+	- The provided name is not registered.
 
-Generate perceptual hash
+## Quick demo commands
 
-Store metadata in database
+```bash
+python imageCLI/app.py register --path cat.jpg --name Cat1
+python imageCLI/app.py search --path cat.jpg
+python imageCLI/app.py delete --name Cat1
+```
 
-🔍 Search for an Image
-python app.py search --path image.jpg
+## Future improvements
 
-
-This will:
-
-Generate hash of input image
-
-Compare with stored hashes
-
-Return matching image name (if found)
-
-❌ Delete an Image
-python app.py delete --name MyImage
-
-
-This removes the image record from the database.
-
-🧠 Key Features
-
-CLI-based interaction
-
-Relational database storage
-
-Efficient similarity search
-
-Unique name constraint
-
-Parameterized SQL queries (prevents SQL injection)
-
-Lightweight & portable system
-
-⚠️ Error Handling
-
-The system handles:
-
-File not found
-
-Duplicate image name
-
-Empty database search
-
-Invalid CLI arguments
-
-Non-existent delete requests
-
-🔧 Possible Improvements
-
-Add indexing on hash column
-
-Store image size & format metadata
-
-Add fuzzy threshold parameter
-
-Upgrade to PostgreSQL for large-scale systems
-
-Add logging support
-
-Store images as BLOB (alternative design)
-
-📊 Scalability Considerations
-
-For large datasets:
-
-Add database indexing
-
-Use binary hash storage
-
-Use Approximate Nearest Neighbor (ANN) search
-
-Move to a more scalable database (PostgreSQL)
-
-🎯 Design Decisions
-Why SQLite?
-
-Lightweight
-
-No server required
-
-ACID compliant
-
-Good for small-medium applications
-
-Why Not Store Images in Database?
-
-Increases database size
-
-Slows down queries
-
-File system storage is more efficient for large binary files
-
-Why Use Hashing?
-
-Faster comparison
-
-Memory efficient
-
-Allows similarity matching
-
-🏁 Conclusion
-
-This project demonstrates:
-
-CLI application development
-
-Relational database usage
-
-Image processing fundamentals
-
-Efficient similarity search techniques
-
-Clean modular Python architecture
-
-
-The system provides a simple but scalable approach to image registration and search using perceptual hashing.
+- Add a `list` command to show all registered images
+- Make similarity threshold configurable
+- Add unit tests
+- Add Docker support
