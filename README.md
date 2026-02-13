@@ -1,6 +1,6 @@
 # Image CLI
 
-A beginner-friendly Command Line Interface (CLI) application to:
+A Command Line Interface (CLI) application to:
 - register images,
 - search for a matching image,
 - de-register (delete) registered images.
@@ -129,3 +129,4 @@ python imageCLI/app.py delete --name Cat1
 - Make similarity threshold configurable
 - Add unit tests
 - Add Docker support
+
